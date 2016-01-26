@@ -1,28 +1,28 @@
 <?php
 
-class InstallCommand extends Command
+class BuildCommand extends Command
 {
     public function getName()
     {
-        return 'install';
+        return 'build';
     }
 
     public function getUsage()
     {
-        return 'install | install <packages>';
+        return 'build | build <packages>';
     }
 
     public function getDescription()
     {
-        return array('If no argument given, install dependencies from deps.json.',
-            'Else install given packages.');
+        return array('If no argument given, build dependencies from deps.json.',
+            'Else build given packages.');
     }
 
     public function run(array $arguments)
     {
         if ($arguments) {
             foreach ($arguments as $dep) {
-                $this->deps->install($dep);
+                $this->deps->build($dep);
             }
         } else {
             $json = $this->deps->nearestJson();
@@ -31,7 +31,7 @@ class InstallCommand extends Command
 
             if ($dependencies) {
                 foreach ($dependencies as $dep) {
-                    $this->deps->install($dep);
+                    $this->deps->build($dep);
                 }
             } else {
                 echo "Nothing to do!\n";

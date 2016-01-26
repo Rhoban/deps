@@ -9,6 +9,9 @@ class Deps
     public function __construct($directory)
     {
         $this->addCommand(new InstallCommand);
+        $this->addCommand(new LinkCommand);
+        $this->addCommand(new UpgradeCommand);
+        $this->addCommand(new BuildCommand);
         $this->addCommand(new RemoveCommand);
         $this->addCommand(new InfoCommand);
         $this->addCommand(new ListCommand);
@@ -119,21 +122,21 @@ class Deps
             if ($return != 0) {
                 system("rm -rf $target");
                 throw new \Exception("Unable to install package $dep");
-            } else {
-                $package = new Package($target);
-                $this->packages[$package->getName()] = $package;
-                foreach ($package->getDependencies() as $dep) {
-                    $this->install($dep);
-                }
             }
         } else {
             $this->update($dep);
+        }
+        $package = new Package($target);
+        $this->packages[$package->getName()] = $package;
+        foreach ($package->getDependencies() as $dep) {
+            $this->install($dep);
         }
         $this->build($dep);
     }
 
     public function update($dep)
     {
+        echo "* Updating $dep...\n";
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
             $package->update();
@@ -144,6 +147,7 @@ class Deps
 
     public function build($dep)
     {
+        echo "* Building $dep...\n";
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
             $package->build();
