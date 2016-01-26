@@ -36,5 +36,7 @@ class InstallCommand extends Command
                 echo "Nothing to do!\n";
             }
         }
+
+        return true;
     }
 }

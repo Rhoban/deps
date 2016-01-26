@@ -9,6 +9,8 @@ class Deps
     public function __construct($directory)
     {
         $this->addCommand(new InstallCommand);
+        $this->addCommand(new RemoveCommand);
+        $this->addCommand(new InfoCommand);
         $this->addCommand(new ListCommand);
         $this->addCommand(new PathesCommand('includes'));
         $this->addCommand(new PathesCommand('libraries'));
@@ -47,16 +49,35 @@ class Deps
         $this->commands[$command->getName()] = $command;
     }
 
+    public function nearestJson()
+    {
+        $directory = getcwd();
+
+        while (!file_exists($directory.'/deps.json')) {
+            $newDir = dirname($directory);
+            if ($newDir == $directory) {
+                throw new \Exception('No deps.json found (you are not in a deps project)');
+            } else {
+                $directory = $newDir;
+            }
+        }
+
+        return $directory.'/deps.json';
+    }
+
     public function run(array $args)
     {
         if (count($args)) {
             $command = array_shift($args);
             if (isset($this->commands[$command])) {
                 try {
-                    $this->commands[$command]->run($args);
+                    if ($this->commands[$command]->run($args)) {
+                        exit(10);
+                    }
                 } catch (\Exception $error) {
                     echo "Error: ".$error->getMessage()."\n";
                 }
+                $bashrc = $this->directory.'/bashrc';
                 return;
             } else {
                 echo "Error: Unknown command $command\n";
@@ -78,19 +99,22 @@ class Deps
 
     public function clean($name)
     {
-        return strtolower(str_replace('/', '_', $name));
+        return trim(strtolower(str_replace('/', '_', $name)));
     }
 
     public function getPackageDirectory($name)
     {
-        return $this->directory . '/packages/' . $this->clean($name);
+        return trim($this->directory . '/packages/' . $this->clean($name));
     }
 
     public function install($dep)
     {
         if (!$this->hasPackage($dep)) {
-            echo "Installing $dep...\n";
+            echo "* Installing $dep...\n";
             $target = $this->getPackageDirectory($dep);
+            if (is_dir($target)) {
+                `rm -rf $target`;
+            }
             system("git clone --depth=1 https://github.com/$dep $target", $return);
             if ($return != 0) {
                 system("rm -rf $target");
@@ -98,6 +122,9 @@ class Deps
             } else {
                 $package = new Package($target);
                 $this->packages[$package->getName()] = $package;
+                foreach ($package->getDependencies() as $dep) {
+                    $this->install($dep);
+                }
             }
         } else {
             $this->update($dep);
