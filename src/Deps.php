@@ -128,8 +128,8 @@ class Deps
         }
         $package = new Package($target);
         $this->packages[$package->getName()] = $package;
-        foreach ($package->getDependencies() as $dep) {
-            $this->install($dep);
+        foreach ($package->getDependencies() as $sdep) {
+            $this->install($sdep);
         }
         $this->build($dep);
     }
