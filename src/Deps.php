@@ -123,11 +123,13 @@ class Deps
                 system("rm -rf $target");
                 throw new \Exception("Unable to install package $dep");
             }
+            $package = new Package($target);
+            $this->packages[$package->getName()] = $package;
         } else {
             $this->update($dep);
+            $package = $this->getPackage($dep);
         }
-        $package = new Package($target);
-        $this->packages[$package->getName()] = $package;
+        $package->readConfig();
         foreach ($package->getDependencies() as $sdep) {
             $this->install($sdep);
         }
