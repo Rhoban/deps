@@ -22,7 +22,7 @@ class RemoveCommand extends Command
         foreach ($arguments as $dep) {
             echo "* Removing $dep...\n";
             $dir = $this->deps->getPackageDirectory($dep);
-            `rm -rf $dir`;
+            OS::run("rm -rf $dir");
         }
 
         return true;

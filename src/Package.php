@@ -42,7 +42,10 @@ class Package
         }
 
         foreach ($pathes as &$path) {
-            $path = $this->directory.'/'.$path;
+			$path = $this->directory.'/'.$path;
+			if ($name == 'binaries') {
+				$path = OS::bashize($path);
+			}
         }
 
         return $pathes;
@@ -80,14 +83,16 @@ class Package
     public function build()
     {
         if (isset($this->config['build'])) {
-            system('cd '.$this->directory.';'.implode(';', $this->config['build']));
+			$build = $this->config['build'];
+			OS::tweakBuild($build);
+            OS::run('cd '.OS::bashize($this->directory).';'.implode(';', $build));
         }
     }
 
     public function update()
     {
         if (isset($this->config['build'])) {
-            system('cd '.$this->directory.';git pull');
+            OS::run('cd '.OS::bashize($this->directory).';git pull');
             $this->readConfig();
         }
     }

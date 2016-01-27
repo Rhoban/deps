@@ -16,6 +16,6 @@ class SelfUpdateCommand extends Command
     {
         echo "* Updating deps from git...\n";
         $dir = $this->deps->getDirectory();
-        `cd $dir; git pull`;
+        OS::run("cd $dir; git pull");
     }
 }
