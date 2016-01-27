@@ -116,6 +116,33 @@ class Deps
         return trim($this->directory . '/packages/' . $this->clean($name));
     }
 
+    public function getPathes($name)
+    {
+        $pathes = array();
+        foreach ($this->getPackages() as $package) {
+            $pathes = array_merge($pathes, $package->getPathes($name));
+        }
+
+        return implode(':', $pathes);
+    }
+
+    protected function updateEnv()
+    {
+        $binaries = $this->getPathes('binaries');
+        $libraries = $this->getPathes('libraries');
+        $includes = $this->getPathes('includes');
+
+        $base=getenv('BASE_PATH');
+        putenv("PATH=$binaries:$base");
+        $base=getenv('BASE_CPATH');
+        putenv("CPATH=$includes:$base");
+        $base=getenv('BASE_LIBRARY_PATH');
+        putenv("LIBRARY_PATH=$libraries:$base");
+        $base=getenv('BASE_LD_LIBRARY_PATH');
+        putenv("LD_LIBRARY_PATH=$libraries:$base");
+
+    }
+
     public function install($dep)
     {
         if (!$this->hasPackage($dep)) {
@@ -155,6 +182,7 @@ class Deps
 
     public function build($dep)
     {
+        $this->updateEnv();
         echo "* Building $dep...\n";
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);

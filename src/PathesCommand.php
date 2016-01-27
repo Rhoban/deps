@@ -21,11 +21,6 @@ class PathesCommand extends Command
 
     public function run(array $arguments)
     {
-        $includes = array();
-        foreach ($this->deps->getPackages() as $package) {
-            $includes = array_merge($includes, $package->getPathes($this->name));
-        }
-
-        echo implode(':', $includes)."\n";
+        echo $this->deps->getPathes($this->name)."\n";
     }
 }

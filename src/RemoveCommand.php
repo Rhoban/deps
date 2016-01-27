@@ -24,5 +24,7 @@ class RemoveCommand extends Command
             $dir = $this->deps->getPackageDirectory($dep);
             `rm -rf $dir`;
         }
+
+        return true;
     }
 }
