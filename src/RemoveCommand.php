@@ -22,7 +22,6 @@ class RemoveCommand extends Command
         foreach ($arguments as $dep) {
             echo "* Removing $dep...\n";
             $dir = $this->deps->getPackageDirectory($dep);
-            var_dump($dir);
             `rm -rf $dir`;
         }
     }
