@@ -13,9 +13,9 @@ fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Getting deps includes, libraries and binaries
-DEPS_INCLUDES=`$DIR/deps.php includes`
-DEPS_LIBRARIES=`$DIR/deps.php libraries`
-DEPS_BINARIES=`$DIR/deps.php binaries`
+DEPS_INCLUDES=`php $DIR/deps.php includes`
+DEPS_LIBRARIES=`php $DIR/deps.php libraries`
+DEPS_BINARIES=`php $DIR/deps.php binaries`
 
 export CPATH="$DEPS_INCLUDES:$BASE_CPATH"
 export LIBRARY_PATH="$DEPS_LIBRARIES:$BASE_LIBRARY_PATH"
@@ -23,7 +23,7 @@ export LD_LIBRARY_PATH="$DEPS_LIBRARIES:$BASE_LD_LIBRARY_PATH"
 export PATH="$DEPS_BINARIES:$BASE_PATH"
 
 function deps {
-    $DIR/deps.php $*
+    php $DIR/deps.php $*
     if [ $? -eq 10 ]; then
         echo "Reloading variables..."
         source "$DIR/bashrc"
