@@ -10,10 +10,10 @@ class OS
 	static public function run($command)
 	{
 		if (self::isWindows()) {
-			$bashPath = 'C:\Program Files (x86)\Git\bin';
 			$tmp = tempnam(__DIR__.'/tmp', 'cmd');
 			file_put_contents($tmp, $command);
-			system('cd '.$bashPath.' & sh.exe --login '.$tmp, $return);
+			putenv('DEPS_INITIALIZED=');
+			system('sh --login '.$tmp, $return);
 			unlink($tmp);
 		} else {
 			system($command, $return);
@@ -35,7 +35,7 @@ class OS
 	{
 		if (self::isWindows()) {
 			$path = str_replace('\\', '/', $path);
-			$path = preg_replace('#^([A-Z]{1}):#', '/$1', $path);
+			$path = preg_replace('#^([a-z]{1}):#i', '/$1', $path);
 		}
 		
 		return $path;

@@ -137,13 +137,13 @@ class Deps
         $includes = $this->getPathes('includes');
 
         $base=getenv('BASE_PATH');
-        putenv("PATH=$binaries:$base");
+        putenv("PATH=$binaries$base");
         $base=getenv('BASE_CPATH');
-        putenv("CPATH=$includes:$base");
+        putenv("CPATH=$includes$base");
         $base=getenv('BASE_LIBRARY_PATH');
-        putenv("LIBRARY_PATH=$libraries:$base");
+        putenv("LIBRARY_PATH=$libraries$base");
         $base=getenv('BASE_LD_LIBRARY_PATH');
-        putenv("LD_LIBRARY_PATH=$libraries:$base");
+        putenv("LD_LIBRARY_PATH=$libraries$base");
     }
 
     public function install($dep)
