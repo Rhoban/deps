@@ -32,6 +32,11 @@ class Deps
         }
     }
 
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
     public function hasPackage($name)
     {
         return isset($this->packages[$name]);
