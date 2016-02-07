@@ -42,7 +42,9 @@ an example:
     "build": ["make"],
     "deps": [
         "rhobandeps/jsoncpp"
-    ]
+    ],
+	"includes": "include",
+	"binaries": "buildDir"
 }
 ```
 
