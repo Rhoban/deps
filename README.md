@@ -2,7 +2,11 @@
 
 ## Installation
 
-First, clone this repository:
+Get these packages:
+
+	apt-get install php5-cli git cmake
+
+And clone this repository:
 
     git clone https://github.com/Rhoban/deps.git
 
