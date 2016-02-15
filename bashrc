@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Saving default values for pathes
-if [ "$DEPS_INITIALIZED" == "" ]; then
+if [ "$DEPS_INITIALIZED" = "" ]; then
     export BASE_PATH=$PATH
     export BASE_CPATH=$CPATH
     export BASE_LIBRARY_PATH=$LIBRARY_PATH
