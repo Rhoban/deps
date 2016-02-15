@@ -33,6 +33,7 @@ class BuildCommand extends Command
                 foreach ($dependencies as $dep) {
                     $this->deps->build($dep);
                 }
+                $this->deps->build($package->getName());
             } else {
                 echo "Nothing to do!\n";
             }
