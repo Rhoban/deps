@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Saving default values for pathes
-if [ "$DEPS_INITIALIZED" == "" ]; then
+if [ "$DEPS_INITIALIZED" = "" ]; then
     export BASE_PATH=$PATH
     export BASE_CPATH=$CPATH
     export BASE_LIBRARY_PATH=$LIBRARY_PATH
@@ -10,7 +10,7 @@ if [ "$DEPS_INITIALIZED" == "" ]; then
 fi
 
 # Current directory
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="${0:a:h}"
 
 # Getting deps includes, libraries and binaries
 DEPS_INCLUDES=`php $DIR/deps.php includes`
@@ -26,6 +26,6 @@ function deps {
     php $DIR/deps.php $*
     if [ $? -eq 10 ]; then
         echo "Reloading variables..."
-        source "$DIR/bashrc"
+        source "$DIR/zshrc"
     fi
 }
