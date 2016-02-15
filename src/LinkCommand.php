@@ -25,9 +25,9 @@ class LinkCommand extends Command
             echo "* Linking package $name to $linkDir...\n";
             $dir = $this->deps->getPackageDirectory($package->getName());
             if (is_dir($dir)) {
-                `rm -rf $dir`;
+                OS::run("rm -rf $dir");
             }
-            `ln -s $linkDir $dir`;
+            OS::run("ln -s $linkDir $dir");
         }
     }
 }

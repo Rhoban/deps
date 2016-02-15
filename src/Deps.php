@@ -86,7 +86,6 @@ class Deps
                 } catch (\Exception $error) {
                     echo "Error: ".$error->getMessage()."\n";
                 }
-                $bashrc = $this->directory.'/bashrc';
                 return;
             } else {
                 echo "Error: Unknown command $command\n";
@@ -118,12 +117,17 @@ class Deps
 
     public function getPathes($name)
     {
+		$separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
         $pathes = array();
         foreach ($this->getPackages() as $package) {
             $pathes = array_merge($pathes, $package->getPathes($name));
         }
 
-        return implode(':', $pathes);
+        $pathes = implode($separator, $pathes);
+		if ($pathes) {
+			$pathes .= $separator;
+		}
+		return $pathes;
     }
 
     protected function updateEnv()
@@ -133,14 +137,13 @@ class Deps
         $includes = $this->getPathes('includes');
 
         $base=getenv('BASE_PATH');
-        putenv("PATH=$binaries:$base");
+        putenv("PATH=$binaries$base");
         $base=getenv('BASE_CPATH');
-        putenv("CPATH=$includes:$base");
+        putenv("CPATH=$includes$base");
         $base=getenv('BASE_LIBRARY_PATH');
-        putenv("LIBRARY_PATH=$libraries:$base");
+        putenv("LIBRARY_PATH=$libraries$base");
         $base=getenv('BASE_LD_LIBRARY_PATH');
-        putenv("LD_LIBRARY_PATH=$libraries:$base");
-
+        putenv("LD_LIBRARY_PATH=$libraries$base");
     }
 
     public function install($dep)
@@ -149,11 +152,12 @@ class Deps
             echo "* Installing $dep...\n";
             $target = $this->getPackageDirectory($dep);
             if (is_dir($target)) {
-                `rm -rf $target`;
+                OS::run("rm -rf $target");
             }
-            system("git clone --depth=1 https://github.com/$dep $target", $return);
+			$btarget = OS::bashize($target);
+            $return = OS::run("git clone --depth=1 https://github.com/$dep $btarget");
             if ($return != 0) {
-                system("rm -rf $target");
+                OS::run("rm -rf $target");
                 throw new \Exception("Unable to install package $dep");
             }
             $package = new Package($target);
