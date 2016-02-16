@@ -16,23 +16,23 @@ class InfoCommand extends Command
     {
         $json = $this->deps->nearestJson();
         $package = new Package(dirname($json));
-        echo "From $json\n\n";
-        echo "* project name: ".$package->getName()."\n";
+        Terminal::info("From $json\n\n");
+        Terminal::bold("* project name: ".$package->getName()."\n");
 
         $dependencies = $package->getDependencies();
         if ($dependencies) {
-            echo "* dependencies:\n";
+            Terminal::bold("* dependencies:\n");
             foreach ($dependencies as $dep) {
                 echo "  - $dep ";
                 if ($this->deps->hasPackage($dep)) {
-                    echo "(installed)";
+                    Terminal::success("(installed)");
                 } else {
-                    echo "(not installed)";
+                    Terminal::warning("(not installed)");
                 }
                 echo "\n";
             }
         } else {
-            echo "* no dependencies\n";
+            Terminal::bold("* no dependencies\n");
         }
     }
 }

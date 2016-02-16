@@ -42,10 +42,10 @@ class Package
         }
 
         foreach ($pathes as &$path) {
-			$path = $this->directory.'/'.$path;
-			if ($name == 'binaries') {
-				$path = OS::bashize($path);
-			}
+            $path = $this->directory.'/'.$path;
+            if ($name == 'binaries') {
+                $path = OS::bashize($path);
+            }
         }
 
         return $pathes;
@@ -55,12 +55,12 @@ class Package
     {
         return $this->getPathes('includes');
     }
-    
+
     public function getLibraries()
     {
         return $this->getPathes('libraries');
     }
-    
+
     public function getBinaries()
     {
         return $this->getPathes('binaries');
@@ -83,16 +83,24 @@ class Package
     public function build()
     {
         if (isset($this->config['build'])) {
-			$build = $this->config['build'];
-			OS::tweakBuild($build);
-            OS::run('cd '.OS::bashize($this->directory).';'.implode(';', $build));
+            $build = $this->config['build'];
+            OS::tweakBuild($build);
+            if (OS::run('cd '.OS::bashize($this->directory).';'.implode(';', $build)) != 0) {
+                throw new \Exception('Build of '.$this->getName().' failed');
+            } else {
+                Terminal::success('Built '.$this->getName()."\n");
+            }
         }
     }
 
     public function update()
     {
         if (isset($this->config['build'])) {
-            OS::run('cd '.OS::bashize($this->directory).';git pull');
+            if (OS::run('cd '.OS::bashize($this->directory).';git pull') != 0) {
+                throw new \Exception('Update of '.$this->getName().' failed');
+            } else {
+                Terminal::success('Updated '.$this->getName()."\n");
+            }
             $this->readConfig();
         }
     }

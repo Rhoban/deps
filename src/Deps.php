@@ -84,11 +84,11 @@ class Deps
                         exit(10);
                     }
                 } catch (\Exception $error) {
-                    echo "Error: ".$error->getMessage()."\n";
+                    Terminal::error("Error: ".$error->getMessage()."\n");
                 }
                 return;
             } else {
-                echo "Error: Unknown command $command\n";
+                Terminal::error("Error: Unknown command $command\n");
             }
         }
 
@@ -97,11 +97,12 @@ class Deps
 
     public function help()
     {
-        echo "deps v0.1, dependencies manager\n";
-        echo "\n";
+        Terminal::info("deps v0.1, dependencies manager\n");
+        Terminal::info("\n");
         foreach ($this->commands as $command) {
-            echo $command->getName().": usage: deps ".$command->getUsage()."\n";
-            echo '    '.implode("\n    ", $command->getDescription())."\n\n";
+            Terminal::bold($command->getName());
+            Terminal::info(": usage: deps ".$command->getUsage()."\n");
+            Terminal::write('    '.implode("\n    ", $command->getDescription())."\n\n");
         }
     }
 
@@ -149,7 +150,7 @@ class Deps
     public function install($dep)
     {
         if (!$this->hasPackage($dep)) {
-            echo "* Installing $dep...\n";
+            Terminal::info("* Installing $dep...\n");
             $target = $this->getPackageDirectory($dep);
             if (is_dir($target)) {
                 OS::run("rm -rf $target");
@@ -175,7 +176,7 @@ class Deps
 
     public function update($dep)
     {
-        echo "* Updating $dep...\n";
+        Terminal::info("* Updating $dep...\n");
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
             $package->update();
@@ -187,7 +188,7 @@ class Deps
     public function build($dep)
     {
         $this->updateEnv();
-        echo "* Building $dep...\n";
+        Terminal::info("* Building $dep...\n");
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
             $package->build();

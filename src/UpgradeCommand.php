@@ -26,9 +26,13 @@ class UpgradeCommand extends Command
             }
         } else {
             foreach ($this->deps->getPackages() as $package) {
-                $dep = $package->getName();
-                $this->deps->update($dep);
-                $this->deps->build($dep);
+                try {
+                    $dep = $package->getName();
+                    $this->deps->update($dep);
+                    $this->deps->build($dep);
+                } catch (\Exception $error) {
+                    Terminal::error($error->getMessage()."\n");
+                }
             }
         }
 

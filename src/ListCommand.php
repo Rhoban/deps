@@ -14,9 +14,9 @@ class ListCommand extends Command
 
     public function run(array $arguments)
     {
-        echo "Installed packages:\n";
+        Terminal::info("Installed packages:\n");
         foreach ($this->deps->getPackages() as $package) {
-            echo '* '.$package->getName()."\n";
+            Terminal::bold('* '.$package->getName()."\n");
         }
     }
 }

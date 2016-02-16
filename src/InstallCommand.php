@@ -34,7 +34,7 @@ class InstallCommand extends Command
                     $this->deps->install($dep);
                 }
             } else {
-                echo "Nothing to do!\n";
+                Terminal::success("Nothing to do!\n");
             }
         }
 
