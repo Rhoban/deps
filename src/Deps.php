@@ -119,17 +119,17 @@ class Deps
 
     public function getPathes($name)
     {
-		$separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
+        $separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
         $pathes = array();
         foreach ($this->getPackages() as $package) {
             $pathes = array_merge($pathes, $package->getPathes($name));
         }
 
         $pathes = implode($separator, $pathes);
-		if ($pathes) {
-			$pathes .= $separator;
-		}
-		return $pathes;
+        if ($pathes) {
+            $pathes .= $separator;
+        }
+        return $pathes;
     }
 
     protected function updateEnv()
@@ -156,7 +156,7 @@ class Deps
             if (is_dir($target)) {
                 OS::run("rm -rf $target");
             }
-			$btarget = OS::bashize($target);
+            $btarget = OS::bashize($target);
             $return = OS::run("git clone --depth=1 https://github.com/$dep $btarget");
             if ($return != 0) {
                 OS::run("rm -rf $target");
