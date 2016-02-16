@@ -16,6 +16,7 @@ class Deps
         $this->addCommand(new InfoCommand);
         $this->addCommand(new ListCommand);
         $this->addCommand(new SelfUpdateCommand);
+        $this->addCommand(new ReloadCommand);
         $this->addCommand(new PathesCommand('includes'));
         $this->addCommand(new PathesCommand('libraries'));
         $this->addCommand(new PathesCommand('binaries'));
