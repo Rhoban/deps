@@ -29,14 +29,10 @@ class BuildCommand extends Command
             $package = new Package(dirname($json));
             $dependencies = $package->getDependencies();
 
-            if ($dependencies) {
-                foreach ($dependencies as $dep) {
-                    $this->deps->build($dep);
-                }
-                $this->deps->build($package->getName());
-            } else {
-                echo "Nothing to do!\n";
+            foreach ($dependencies as $dep) {
+                $this->deps->build($dep);
             }
+            $this->deps->build($package->getName());
         }
 
         return true;
