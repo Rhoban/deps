@@ -20,6 +20,7 @@ class Deps
         $this->addCommand(new PathesCommand('includes'));
         $this->addCommand(new PathesCommand('libraries'));
         $this->addCommand(new PathesCommand('binaries'));
+        $this->addCommand(new PathesCommand('links'));
 
         // Loading packages
         $this->directory = $directory;
