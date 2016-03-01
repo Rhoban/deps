@@ -117,12 +117,14 @@ class Deps
         return trim($this->directory . '/packages/' . $this->clean($name));
     }
 
-    public function getPathes($name)
+    public function getPathes($name, array $packages)
     {
         $separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
         $pathes = array();
         foreach ($this->getPackages() as $package) {
-            $pathes = array_merge($pathes, $package->getPathes($name));
+            if (!$packages || in_array($package->getName(), $packages)) {
+                $pathes = array_merge($pathes, $package->getPathes($name));
+            }
         }
 
         $pathes = implode($separator, $pathes);

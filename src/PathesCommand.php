@@ -21,6 +21,6 @@ class PathesCommand extends Command
 
     public function run(array $arguments)
     {
-        echo $this->deps->getPathes($this->name)."\n";
+        echo $this->deps->getPathes($this->name, $arguments)."\n";
     }
 }
