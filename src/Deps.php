@@ -118,7 +118,7 @@ class Deps
         return trim($this->directory . '/packages/' . $this->clean($name));
     }
 
-    public function getPathes($name, array $packages)
+    public function getPathes($name, array $packages=array())
     {
         $separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
         $pathes = array();

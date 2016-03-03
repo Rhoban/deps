@@ -41,12 +41,10 @@ class Package
             $pathes = array();
         }
 
-        if ($name != 'links') {
-            foreach ($pathes as &$path) {
-                $path = $this->directory.'/'.$path;
-                if ($name == 'binaries') {
-                    $path = OS::bashize($path);
-                }
+        foreach ($pathes as &$path) {
+            $path = $this->directory.'/'.$path;
+            if ($name == 'binaries') {
+                $path = OS::bashize($path);
             }
         }
 
