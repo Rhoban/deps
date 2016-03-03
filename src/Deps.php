@@ -151,7 +151,7 @@ class Deps
         putenv("LD_LIBRARY_PATH=$libraries$base");
     }
 
-    public function install($dep)
+    public function install($dep, $rebuildDeps = true)
     {
         if (!$this->hasPackage($dep)) {
             Terminal::info("* Installing $dep...\n");
@@ -173,7 +173,13 @@ class Deps
         }
         $package->readConfig();
         foreach ($package->getDependencies() as $sdep) {
-            $this->install($sdep);
+            if ($rebuildDeps) {
+                $this->install($sdep);
+            } else {
+                if (!$this->hasPackage($sdep)) {
+                    $this->install($sdep);
+                }
+            }
         }
         $this->build($dep);
     }
