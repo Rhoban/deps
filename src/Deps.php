@@ -15,6 +15,7 @@ class Deps
         $this->addCommand(new RemoveCommand);
         $this->addCommand(new InfoCommand);
         $this->addCommand(new ListCommand);
+        $this->addCommand(new StatusCommand);
         $this->addCommand(new SelfUpdateCommand);
         $this->addCommand(new ReloadCommand);
         $this->addCommand(new PathesCommand('includes'));
