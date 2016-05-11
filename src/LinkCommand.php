@@ -22,12 +22,18 @@ class LinkCommand extends Command
         if (!$name) {
             echo "Error: no name for package\n";
         } else {
-            echo "* Linking package $name to $linkDir...\n";
-            $dir = $this->deps->getPackageDirectory($package->getName());
-            if (is_dir($dir)) {
-                OS::run("rm -rf $dir");
+            echo "Do you want to create symlink from $name to $linkDir? (yes/no)\n";
+            $l = readline();
+            if (trim($l) == 'yes') {
+                echo "* Linking package $name to $linkDir...\n";
+                $dir = $this->deps->getPackageDirectory($package->getName());
+                if (is_dir($dir)) {
+                    OS::run("rm -rf $dir");
+                }
+                OS::run("ln -s $linkDir $dir");
+            } else {
+                echo "Aborting.\n";
             }
-            OS::run("ln -s $linkDir $dir");
         }
     }
 }
