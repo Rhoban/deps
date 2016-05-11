@@ -16,7 +16,7 @@ class StatusCommand extends Command
     {
         $dir = $package->getDirectory();
         $name = $package->getName();
-        $result = `cd $dir; git status`;
+        $result = `cd $dir; LANG=en_US.UTF-8 git status`;
         $errors = array();
         $warnings = array();
         $messages = array();
