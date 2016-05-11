@@ -21,15 +21,13 @@ class UpgradeCommand extends Command
     {
         if ($arguments) {
             foreach ($arguments as $dep) {
-                $this->deps->update($dep);
-                $this->deps->build($dep);
+                $this->deps->install($dep, false);
             }
         } else {
             foreach ($this->deps->getPackages() as $package) {
                 try {
                     $dep = $package->getName();
-                    $this->deps->update($dep);
-                    $this->deps->build($dep);
+                    $this->deps->install($dep, false);
                 } catch (\Exception $error) {
                     Terminal::error($error->getMessage()."\n");
                 }
