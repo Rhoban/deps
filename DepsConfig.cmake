@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-set (DEPS_LIBRARIES)
-
 function (deps_path library type)
     execute_process (COMMAND "php" "${Deps_DIR}/deps.php" "${type}" "${library}"
         OUTPUT_VARIABLE RESULT)
@@ -21,11 +19,8 @@ function (deps_add_library library)
     deps_path(${library} "includes")
     include_directories (${PATHES})
 
-    # Adding libraries path
-    deps_path(${library} "libraries")
-    link_directories (${PATHES})
-
     # Adding links
     deps_path(${library} "links")
-    set (DEPS_LIBRARIES ${DEPS_LIBRARIES} ${PATHES} PARENT_SCOPE)
+    list(APPEND DEPS_LIBRARIES ${PATHES})
+    set(DEPS_LIBRARIES ${DEPS_LIBRARIES} PARENT_SCOPE)
 endfunction ()
