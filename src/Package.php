@@ -93,15 +93,30 @@ class Package
         }
     }
 
-    public function update()
+    public function updateRemotes(Remotes $remotes, $fetch=false)
     {
-        if (isset($this->config['build'])) {
-            if (OS::run('cd '.OS::bashize($this->directory).';git pull') != 0) {
-                throw new \Exception('Update of '.$this->getName().' failed');
-            } else {
-                Terminal::success('Updated '.$this->getName()."\n");
-            }
-            $this->readConfig();
+        foreach ($remotes->getRemotes() as $remote => $addr) {
+            $addr = sprintf($addr, $this->getName());
+            OS::run('cd '.OS::bashize($this->directory).";git remote remove $remote");
+            OS::run('cd '.OS::bashize($this->directory).";git remote add $remote $addr");
         }
+        if ($fetch) {
+            $current = $remotes->getCurrent();
+            OS::run('cd '.OS::bashize($this->directory).";git fetch $current");
+            OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/master");
+        }
+    }
+
+    public function update(Remotes $remotes)
+    {
+        $this->updateRemotes($remotes);
+        $current = $remotes->getCurrent();
+        if (OS::run('cd '.OS::bashize($this->directory).";git pull $current master") != 0) {
+            throw new \Exception('Update of '.$this->getName().' failed');
+        } else {
+            Terminal::success('Updated '.$this->getName()."\n");
+        }
+        OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/master");
+        $this->readConfig();
     }
 }

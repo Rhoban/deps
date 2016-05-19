@@ -3,11 +3,14 @@
 class Deps
 {
     protected $directory;
+    protected $remotes;
     protected $commands = array();
     protected $packages = array();
 
     public function __construct($directory)
     {
+        $this->remotes = new Remotes;
+
         $this->addCommand(new InstallCommand);
         $this->addCommand(new LinkCommand);
         $this->addCommand(new UpgradeCommand);
@@ -33,6 +36,11 @@ class Deps
                 $this->packages[$package->getName()] = $package;
             }
         }
+    }
+
+    public function getRemotes()
+    {
+        return $this->remotes;
     }
 
     public function getDirectory()
@@ -161,12 +169,16 @@ class Deps
                 OS::run("rm -rf $target");
             }
             $btarget = OS::bashize($target);
-            $return = OS::run("git clone --depth=1 https://github.com/$dep $btarget");
+            $remotes = $this->remotes->getRemotes();
+            $addr = $remotes[$this->remotes->getCurrent()];
+            $addr = sprintf($addr, $dep);
+            $return = OS::run("git clone --depth=1 $addr $btarget");
             if ($return != 0) {
                 OS::run("rm -rf $target");
                 throw new \Exception("Unable to install package $dep");
             }
             $package = new Package($target);
+            $package->updateRemotes($this->remotes, true);
             $this->packages[$package->getName()] = $package;
         } else {
             $this->update($dep);
@@ -190,7 +202,7 @@ class Deps
         Terminal::info("* Updating $dep...\n");
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
-            $package->update();
+            $package->update($this->remotes);
         } else {
             throw new \Exception("Unable to update not existing package $dep");
         }
