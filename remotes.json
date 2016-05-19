@@ -1,6 +1,6 @@
 {
     "remotes": {
-        "origin": "http://github.com/%s",
+        "origin": "git@github.com:%s",
         "fithub": "git@fithub:%s.git"
     },
     "current": "origin"

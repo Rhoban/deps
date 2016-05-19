@@ -92,6 +92,14 @@ class Package
             }
         }
     }
+    public function getBranch()
+    {
+        $tmp = tempnam(__DIR__.'/tmp/', 'branch');
+        OS::run('cd '.OS::bashize($this->directory).";git name-rev --name-only HEAD > $tmp");
+        $branch = trim(file_get_contents($tmp));
+        unlink($tmp);
+        return $branch;
+    }
 
     public function updateRemotes(Remotes $remotes, $fetch=false)
     {
@@ -102,21 +110,23 @@ class Package
         }
         if ($fetch) {
             $current = $remotes->getCurrent();
+            $branch = $this->getBranch();
             OS::run('cd '.OS::bashize($this->directory).";git fetch $current");
-            OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/master");
+            OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/$branch");
         }
     }
 
     public function update(Remotes $remotes)
     {
+        $branch = $this->getBranch();
         $this->updateRemotes($remotes);
         $current = $remotes->getCurrent();
-        if (OS::run('cd '.OS::bashize($this->directory).";git pull $current master") != 0) {
+        if (OS::run('cd '.OS::bashize($this->directory).";git pull $current $branch") != 0) {
             throw new \Exception('Update of '.$this->getName().' failed');
         } else {
             Terminal::success('Updated '.$this->getName()."\n");
         }
-        OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/master");
+        OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/$branch");
         $this->readConfig();
     }
 }
