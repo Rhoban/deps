@@ -1,22 +1,34 @@
 cmake_minimum_required(VERSION 2.8)
 
+# Get pathes for a given library and type
+# This basically call deps [library] [type] and retrieve the result data in
+# a CMake list (PATHES) that is set in the parent scope
 function (deps_path library type)
+    # Running deps
     execute_process (COMMAND "php" "${Deps_DIR}/deps.php" "${type}" "${library}"
         OUTPUT_VARIABLE RESULT)
-    string(REPLACE ":" ";" RESULTLIST ${RESULT})
+    # Replacing separator to get a CMake list
+    string (REPLACE ":" ";" RESULTLIST ${RESULT})
+    # Appending results to the list, avoiding empty strings
     set (PATHES)
     foreach (RESULTPATH ${RESULTLIST})
-        string(STRIP ${RESULTPATH} RESULTPATH)
+        string (STRIP ${RESULTPATH} RESULTPATH)
         if (NOT "${RESULTPATH}" STREQUAL "")
             set (PATHES ${PATHES} ${RESULTPATH})
         endif ()
     endforeach ()
+    # Setting it in the parent scope
     set (PATHES ${PATHES} PARENT_SCOPE)
 endfunction ()
 
+# This can be used to add a specific library to the inclusion and the
+# DEPS_LIBRARIES path
 function (deps_add_library library)
     # Check that the library was not already imported
     if (NOT ";${DEPS_IMPORTED};" MATCHES ${library})
+        message("-- deps: adding library ${library}")
+
+        # Marking it as already imported
         list(APPEND DEPS_IMPORTED ${library})
         set (DEPS_IMPORTED ${DEPS_IMPORTED} PARENT_SCOPE)
 
@@ -31,6 +43,9 @@ function (deps_add_library library)
         # Replace name, foo/bar will become foo_bar
         string(REPLACE "/" "_" libraryName "${library}")
 
+        # Each library specified in the deps links section is imported using
+        # CMake set_property(), if foo/bar have a links of foo.so and bar.so,
+        # is will result in foo_bar_1 (foo.so) and foo_bar_2 (bar.so)
         set (k 0)
         foreach (libpath ${PATHES})
             math(EXPR k "${k}+1")
@@ -41,4 +56,15 @@ function (deps_add_library library)
             set(DEPS_LIBRARIES ${DEPS_LIBRARIES} PARENT_SCOPE)
         endforeach ()
     endif()
+endfunction ()
+
+# This will add all the libraries that the current project depend on
+# to the inclusion pathes and to the DEPS_LIBRARIES variable
+function (deps_add_libraries)
+    deps_path("porcelain" "info")
+    foreach (dep ${PATHES})
+        deps_add_library(${dep})
+        set(DEPS_LIBRARIES ${DEPS_LIBRARIES} PARENT_SCOPE)
+        set (DEPS_IMPORTED ${DEPS_IMPORTED} PARENT_SCOPE)
+    endforeach ()
 endfunction ()
