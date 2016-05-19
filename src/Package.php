@@ -17,6 +17,11 @@ class Package
         return $this->directory;
     }
 
+    public function hasConfig()
+    {
+        return isset($this->config['name']);
+    }
+
     public function readConfig()
     {
         $jsonFile = $this->directory.'/deps.json';

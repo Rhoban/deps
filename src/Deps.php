@@ -178,6 +178,10 @@ class Deps
                 throw new \Exception("Unable to install package $dep");
             }
             $package = new Package($target);
+            if (!$package->hasConfig()) {
+                OS::run("rm -rf $btarget");
+                throw new \Exception("$dep doesn't look like a deps package (no deps.json)");
+            }
             $package->updateRemotes($this->remotes, true);
             $this->packages[$package->getName()] = $package;
         } else {
