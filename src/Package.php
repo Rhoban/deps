@@ -111,7 +111,7 @@ class Package
         if ($fetch) {
             $current = $remotes->getCurrent();
             $branch = $this->getBranch();
-            OS::run('cd '.OS::bashize($this->directory).";git fetch $current");
+            OS::run('cd '.OS::bashize($this->directory).";git fetch --depth=1 $current");
             OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/$branch");
         }
     }
