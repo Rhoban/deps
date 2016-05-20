@@ -6,6 +6,7 @@ class Deps
     protected $remotes;
     protected $commands = array();
     protected $packages = array();
+    protected $installed = array();
 
     public function __construct($directory)
     {
@@ -162,6 +163,11 @@ class Deps
 
     public function install($dep, $rebuildDeps = true)
     {
+        if (isset($this->installed[$dep])) {
+            return;
+        }
+        $this->installed[$dep] = true;
+
         if (!$this->hasPackage($dep)) {
             Terminal::info("* Installing $dep...\n");
             $target = $this->getPackageDirectory($dep);
