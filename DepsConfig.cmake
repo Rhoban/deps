@@ -8,7 +8,11 @@ function (deps_path library type)
     execute_process (COMMAND "php" "${Deps_DIR}/deps.php" "${type}" "${library}"
         OUTPUT_VARIABLE RESULT)
     # Replacing separator to get a CMake list
-    string (REPLACE ":" ";" RESULTLIST ${RESULT})
+	if (WIN32)
+		set (RESULTLIST ${RESULT})
+	else ()
+		string (REPLACE ":" ";" RESULTLIST "${RESULT}")
+	endif ()
     # Appending results to the list, avoiding empty strings
     set (PATHES)
     foreach (RESULTPATH ${RESULTLIST})

@@ -100,7 +100,7 @@ class Package
     public function getBranch()
     {
         $tmp = tempnam(__DIR__.'/tmp/', 'branch');
-        OS::run('cd '.OS::bashize($this->directory).";git name-rev --name-only HEAD > $tmp");
+        OS::run('cd '.OS::bashize($this->directory).";git name-rev --name-only HEAD > ".OS::bashize($tmp));
         $branch = trim(file_get_contents($tmp));
         unlink($tmp);
         return $branch;
