@@ -158,6 +158,7 @@ class Deps
         putenv("LIBRARY_PATH=$libraries$base");
         $base=getenv('BASE_LD_LIBRARY_PATH');
         putenv("LD_LIBRARY_PATH=$libraries$base");
+		putenv("CMAKE_PREFIX_PATH=".__DIR__."/../");
     }
 
     public function install($dep, $rebuildDeps = true)

@@ -13,7 +13,7 @@ class OS
             $tmp = tempnam(__DIR__.'/tmp', 'cmd');
             file_put_contents($tmp, $command);
             putenv('DEPS_INITIALIZED=');
-            system('sh --login '.$tmp, $return);
+            system('sh '.$tmp, $return);
             unlink($tmp);
         } else {
             system($command, $return);
