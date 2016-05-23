@@ -37,12 +37,13 @@ class StatusCommand extends Command
         }
         $messages = implode(', ', array_merge($errors, $warnings, $messages));
         if ($messages) $messages = '('.$messages.')';
+        $branch = $package->getBranch();
         if (count($errors)) {
-            Terminal::error("* $name: ERROR $messages\n");
+            Terminal::error("* [$branch] $name: ERROR $messages\n");
         } else if (count($warnings)) {
-            Terminal::warning("* $name: WARNING $messages\n");
+            Terminal::warning("* [$branch] $name: WARNING $messages\n");
         } else {
-            Terminal::success("* $name: OK $messages\n");
+            Terminal::success("* [$branch] $name: OK $messages\n");
         }
     }
 
