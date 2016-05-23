@@ -97,6 +97,7 @@ class Package
             }
         }
     }
+
     public function getBranch()
     {
         $tmp = tempnam(__DIR__.'/tmp/', 'branch');
