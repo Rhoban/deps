@@ -24,7 +24,7 @@ class CFlagsCommand extends Command
             $flags .= '-I'.$include.' ';
         }
         foreach ($package->getPathes('links') as $link) {
-            $flags .= '-L'.$link.' ';
+            $flags .= ''.$link.' ';
         }
         return $flags;
     }
