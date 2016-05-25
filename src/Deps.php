@@ -193,8 +193,9 @@ class Deps
             }
             $package->updateRemotes($this->remotes, true);
             $this->packages[$package->getName()] = $package;
+            $rebuild = true;
         } else {
-            $this->update($dep);
+            $rebuild = $this->update($dep);
             $package = $this->getPackage($dep);
         }
         $package->readConfig();
@@ -207,7 +208,9 @@ class Deps
                 }
             }
         }
-        $this->build($dep);
+        if ($rebuild) {
+            $this->build($dep);
+        }
     }
 
     public function update($dep)
@@ -215,7 +218,7 @@ class Deps
         Terminal::info("* Updating $dep...\n");
         if ($this->hasPackage($dep)) {
             $package = $this->getPackage($dep);
-            $package->update($this->remotes);
+            return $package->update($this->remotes);
         } else {
             throw new \Exception("Unable to update not existing package $dep");
         }

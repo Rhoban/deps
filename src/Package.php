@@ -107,6 +107,15 @@ class Package
         return $branch;
     }
 
+    public function getCommit()
+    {
+        $tmp = tempnam(__DIR__.'/tmp/', 'commit');
+        OS::run('cd '.OS::bashize($this->directory).";git rev-parse HEAD > ".OS::bashize($tmp));
+        $branch = trim(file_get_contents($tmp));
+        unlink($tmp);
+        return $branch;
+    }
+
     public function updateRemotes(Remotes $remotes, $fetch=false)
     {
         foreach ($remotes->getRemotes() as $remote => $addr) {
@@ -125,6 +134,7 @@ class Package
     public function update(Remotes $remotes)
     {
         $branch = $this->getBranch();
+        $commit = $this->getCommit();
         $this->updateRemotes($remotes);
         $current = $remotes->getCurrent();
         if (OS::run('cd '.OS::bashize($this->directory).";git pull $current $branch") != 0) {
@@ -134,5 +144,6 @@ class Package
         }
         OS::run('cd '.OS::bashize($this->directory).";git branch -u $current/$branch");
         $this->readConfig();
+        return $commit != $this->getCommit();
     }
 }
