@@ -25,6 +25,7 @@ class CFlagsCommand extends Command
         }
         foreach ($package->getPathes('links') as $link) {
             $flags .= ''.$link.' ';
+            $flags .= '-Wl,-rpath,'.dirname($link).' ';
         }
         return $flags;
     }
