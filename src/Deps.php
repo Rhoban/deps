@@ -137,6 +137,15 @@ class Deps
         foreach ($this->getPackages() as $package) {
             if (!$packages || in_array($package->getName(), $packages)) {
                 $pathes = array_merge($pathes, $package->getPathes($name));
+            } else {
+                foreach ($package->getPathes($name) as $key => $path) {
+                    if (is_string(trim($key))) {
+                        $fullName = $package->getName().':'.$key;
+                        if (in_array($fullName, $packages)) {
+                            $pathes[] = $path;
+                        }
+                    }
+                }
             }
         }
 
