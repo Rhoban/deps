@@ -29,7 +29,7 @@ endfunction ()
 # DEPS_LIBRARIES path
 function (deps_add_library library)
     # Check that the library was not already imported
-    if (NOT ";${DEPS_IMPORTED};" MATCHES ${library})
+    if (NOT ";${DEPS_IMPORTED};" MATCHES ";${library};")
         message("-- deps: adding library ${library}")
 
         # Marking it as already imported
