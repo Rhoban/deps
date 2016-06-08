@@ -3,6 +3,7 @@
 abstract class Command
 {
     protected $deps;
+    protected $flags = array();
 
     public function setDeps(Deps $deps)
     {
@@ -16,5 +17,10 @@ abstract class Command
     public function getUsage()
     {
         return $this->getName();
+    }
+
+    public function setFlags(array $flags)
+    {
+        $this->flags = $flags;
     }
 }

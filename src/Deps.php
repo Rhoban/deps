@@ -91,8 +91,10 @@ class Deps
     public function run(array $args)
     {
         if (count($args)) {
-            $command = array_shift($args);
+            $parts = explode(':' , array_shift($args));
+            $command = array_shift($parts);
             if (isset($this->commands[$command])) {
+                $this->commands[$command]->setFlags($parts);
                 try {
                     if ($this->commands[$command]->run($args)) {
                         exit(10);

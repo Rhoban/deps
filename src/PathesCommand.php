@@ -21,6 +21,36 @@ class PathesCommand extends Command
 
     public function run(array $arguments)
     {
-        echo $this->deps->getPathes($this->name, $arguments)."\n";
+        $recursive = in_array('recursive', $this->flags);
+        $walked = array();
+        $pathName = $this->name;
+        $deps = $this->deps;
+
+        $append = function ($name, $append) use ($recursive, &$walked, $pathName, $deps) {
+            if (isset($walked[$name])) {
+                return '';
+            } else {
+                $walked[$name] = true;
+                $pathes = $deps->getPathes($pathName, array($name));
+                if ($recursive && $deps->hasPackage($name)) {
+                    $package = $deps->getPackage($name);
+                    foreach ($package->getDependencies() as $dep) {
+                        $pathes .= $append($dep, $append);
+                    }
+                }
+                return $pathes;
+            }
+        };
+
+        $pathes = '';
+        if ($arguments) {
+            foreach ($arguments as $package) {
+                $pathes .= $append($package, $append);
+            }
+        } else {
+            $pathes = $deps->getPathes($pathName);
+        }
+
+        echo $pathes."\n";
     }
 }
