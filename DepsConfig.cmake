@@ -37,7 +37,7 @@ function (deps_add_library library)
         set (DEPS_IMPORTED ${DEPS_IMPORTED} PARENT_SCOPE)
 
         # Adding includes
-        deps_path(${library} "includes")
+        deps_path(${library} "includes:recursive")
         include_directories (${PATHES})
 
         # Adding links
