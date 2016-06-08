@@ -89,6 +89,11 @@ class Package
     {
         if (isset($this->config['build'])) {
             $build = $this->config['build'];
+            foreach ($build as &$command) {
+                if (trim($command) == 'make' && getenv('DEPS_MAKEJ')) {
+                    $command = 'make -j'.getenv('DEPS_MAKEJ');
+                }
+            }
             OS::tweakBuild($build);
             if (OS::run('cd '.OS::bashize($this->directory).';'.implode(';', $build)) != 0) {
                 throw new \Exception('Build of '.$this->getName().' failed');
