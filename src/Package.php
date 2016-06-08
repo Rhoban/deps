@@ -90,7 +90,7 @@ class Package
         if (isset($this->config['build'])) {
             $build = $this->config['build'];
             foreach ($build as &$command) {
-                if (trim($command) == 'make' && getenv('DEPS_MAKEJ')) {
+                if (trim($command) == 'make' && getenv('DEPS_MAKEJ')!==false) {
                     $command = 'make -j'.getenv('DEPS_MAKEJ');
                 }
             }
