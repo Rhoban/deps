@@ -45,6 +45,10 @@ class PathesCommand extends Command
         $pathes = '';
         if ($arguments) {
             foreach ($arguments as $package) {
+                if ($recursive) {
+                    $parts = explode(':', $package);
+                    $package = $parts[0];
+                }
                 $pathes .= $append($package, $append);
             }
         } else {
