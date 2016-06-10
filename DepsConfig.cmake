@@ -26,8 +26,8 @@ function (deps_path library type)
 endfunction ()
 
 # This can be used to add a specific library to the inclusion and the
-# DEPS_LIBRARIES path
-function (deps_add_library library)
+# variable name path
+function (deps_add_library_custom library variable)
     # Check that the library was not already imported
     if (NOT ";${DEPS_IMPORTED};" MATCHES ";${library};")
         message("-- deps: adding library ${library}")
@@ -56,10 +56,16 @@ function (deps_add_library library)
             set(libraryNameId "${libraryName}_${k}")
             add_library(${libraryNameId} UNKNOWN IMPORTED)
             set_property(TARGET ${libraryNameId} PROPERTY IMPORTED_LOCATION ${libpath})
-            list(APPEND DEPS_LIBRARIES ${libraryNameId})
-            set(DEPS_LIBRARIES ${DEPS_LIBRARIES} PARENT_SCOPE)
+            list(APPEND ${variable} ${libraryNameId})
+            set(${variable} ${${variable}} PARENT_SCOPE)
         endforeach ()
     endif()
+endfunction ()
+# This can be used to add a specific library to the inclusion and the
+# DEPS_LIBRARIES path
+function (deps_add_library library)
+    deps_add_library_custom(${library} "DEPS_LIBRARIES")
+    set(DEPS_LIBRARIES ${DEPS_LIBRARIES} PARENT_SCOPE)
 endfunction ()
 
 # This will add all the libraries that the current project depend on
