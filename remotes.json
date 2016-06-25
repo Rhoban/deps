@@ -2,7 +2,7 @@
     "remotes": {
         "origin": "git@github.com:%s",
         "https": "https://github.com/%s",
-        "fithub": "git@fithub:%s.git"
+        "fithub": "ssh://rhoban@fithub/~/%s"
     },
     "current": "origin"
 }
