@@ -4,5 +4,5 @@
         "https": "https://github.com/%s",
         "fithub": "git@fithub:%s.git"
     },
-    "current": "fithub"
+    "current": "origin"
 }
