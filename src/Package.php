@@ -34,7 +34,7 @@ class Package
             : basename($this->directory));
     }
 
-    public function getPathes($name)
+    public function getPathes($name, $unix=false)
     {
         if (isset($this->config[$name])) {
             if (is_array($this->config[$name])) {
@@ -48,7 +48,7 @@ class Package
 
         foreach ($pathes as &$path) {
             $path = $this->directory.'/'.$path;
-            if ($name == 'binaries') {
+            if ($unix) {
                 $path = OS::bashize($path);
             }
         }

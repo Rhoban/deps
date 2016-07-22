@@ -15,7 +15,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Getting deps includes, libraries and binaries
 DEPS_INCLUDES=`php $DIR/deps.php includes`
 DEPS_LIBRARIES=`php $DIR/deps.php libraries`
-DEPS_BINARIES=`php $DIR/deps.php binaries`
+DEPS_BINARIES=`php $DIR/deps.php binaries:unix`
 
 export CPATH="$DEPS_INCLUDES$BASE_CPATH"
 export LIBRARY_PATH="$DEPS_LIBRARIES$BASE_LIBRARY_PATH"

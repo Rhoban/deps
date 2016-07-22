@@ -132,15 +132,15 @@ class Deps
         return trim($this->directory . '/packages/' . $this->clean($name));
     }
 
-    public function getPathes($name, array $packages=array())
+    public function getPathes($name, array $packages=array(), $unix=false)
     {
-        $separator = ($name == 'binaries' ? ':' : PATH_SEPARATOR);
+        $separator = $unix ? ':' : PATH_SEPARATOR;
         $pathes = array();
         foreach ($this->getPackages() as $package) {
             if (!$packages || in_array($package->getName(), $packages)) {
-                $pathes = array_merge($pathes, $package->getPathes($name));
+                $pathes = array_merge($pathes, $package->getPathes($name, $unix));
             } else {
-                foreach ($package->getPathes($name) as $key => $path) {
+                foreach ($package->getPathes($name, $unix) as $key => $path) {
                     if (is_string(trim($key))) {
                         $fullName = $package->getName().':'.$key;
                         if (in_array($fullName, $packages)) {
