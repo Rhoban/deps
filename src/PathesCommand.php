@@ -22,16 +22,17 @@ class PathesCommand extends Command
     public function run(array $arguments)
     {
         $recursive = in_array('recursive', $this->flags);
+		$unix = in_array('unix', $this->flags);
         $walked = array();
         $pathName = $this->name;
         $deps = $this->deps;
 
-        $append = function ($name, $append) use ($recursive, &$walked, $pathName, $deps) {
+        $append = function ($name, $append) use ($recursive, $unix, &$walked, $pathName, $deps) {
             if (isset($walked[$name])) {
                 return '';
             } else {
                 $walked[$name] = true;
-                $pathes = $deps->getPathes($pathName, array($name));
+                $pathes = $deps->getPathes($pathName, array($name), $unix);
                 if ($recursive && $deps->hasPackage($name)) {
                     $package = $deps->getPackage($name);
                     foreach ($package->getDependencies() as $dep) {
@@ -52,7 +53,7 @@ class PathesCommand extends Command
                 $pathes .= $append($package, $append);
             }
         } else {
-            $pathes = $deps->getPathes($pathName);
+            $pathes = $deps->getPathes($pathName, array(), $unix);
         }
 
         echo $pathes."\n";
